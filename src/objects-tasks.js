@@ -119,8 +119,9 @@ function isEmptyObject(obj) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  const immutableObj = Object.freeze(obj);
+  return immutableObj;
 }
 
 /**
@@ -133,8 +134,16 @@ function makeImmutable(/* obj */) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(lettersObject) {
+  const maxValues = Math.max(...Object.values(lettersObject).flat());
+  const lettersObjectCopy = Array.from({ length: maxValues + 1 }, () => '');
+
+  Object.entries(lettersObject).forEach(([key, values]) => {
+    values.forEach((value) => {
+      lettersObjectCopy[value] = key;
+    });
+  });
+  return lettersObjectCopy.join('');
 }
 
 /**
@@ -151,8 +160,31 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  const bills = {
+    25: 0,
+    50: 0,
+    100: 0,
+  };
+  let sell = true;
+  queue.forEach((bill) => {
+    if (!sellTickets) return;
+    bills[bill] = { ...bills, [bill]: bills[bill] + 1 }[bill];
+    let change = bill - 25;
+    while (change > 0) {
+      if (change >= 50 && bills[50] > 0) {
+        bills[50] -= 1;
+        change -= 50;
+      } else if (bills[25] > 0) {
+        bills[25] -= 1;
+        change -= 25;
+      } else {
+        sell = false;
+        break;
+      }
+    }
+  });
+  return sell;
 }
 
 /**
@@ -168,8 +200,13 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+
+  this.getArea = function r() {
+    return this.height * this.width;
+  };
 }
 
 /**
@@ -182,8 +219,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { height: 10, width: 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
